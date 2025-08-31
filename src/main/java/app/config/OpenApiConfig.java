@@ -13,14 +13,14 @@ public class OpenApiConfig {
   @Bean
   public OpenAPI paymentNlpOpenAPI() {
     return new OpenAPI()
-        .info(new Info()
-            .title("Payment NLP API")
-            .description("Extracts intent, amount, currency and recipient from natural language (EN/ES)")
-            .version("0.1.0")
-            .license(new License().name("Unspecified")))
-        .externalDocs(new ExternalDocumentation()
-            .description("Swagger UI")
-            .url("/swagger-ui.html"));
+        .info(
+            new Info()
+                .title("Payment NLP API")
+                .description(
+                    "Extracts intent, amount, currency and recipient from natural language (EN/ES)")
+                .version("0.1.0")
+                .license(new License().name("Unspecified")))
+        .externalDocs(
+            new ExternalDocumentation().description("Swagger UI").url("/swagger-ui.html"));
   }
 }
-

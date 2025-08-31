@@ -1,31 +1,29 @@
 package app.nlp;
 
-import edu.stanford.nlp.pipeline.*;
 import edu.stanford.nlp.ling.*;
+import edu.stanford.nlp.pipeline.*;
 import edu.stanford.nlp.semgraph.*;
 import edu.stanford.nlp.util.*;
-
-import org.springframework.stereotype.Service;
-
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
 
 @Service
 public class NlpService {
 
   private final StanfordCoreNLP pipeline;
   // Map possible (lemmatized or raw) intent words in EN/ES -> canonical intent
-  private static final Map<String, String> INTENT_MAP = Map.ofEntries(
-      Map.entry("pay", "pay"),
-      Map.entry("send", "send"),
-      Map.entry("transfer", "transfer"),
-      // Spanish
-      Map.entry("pagar", "pay"),
-      Map.entry("enviar", "send"),
-      Map.entry("transferir", "transfer")
-  );
+  private static final Map<String, String> INTENT_MAP =
+      Map.ofEntries(
+          Map.entry("pay", "pay"),
+          Map.entry("send", "send"),
+          Map.entry("transfer", "transfer"),
+          // Spanish
+          Map.entry("pagar", "pay"),
+          Map.entry("enviar", "send"),
+          Map.entry("transferir", "transfer"));
 
   public NlpService() {
     Properties props = new Properties();
@@ -48,7 +46,8 @@ public class NlpService {
     CoreMap s = sentences.get(0);
 
     // 1) intent from root verb lemma (fallback: first verb in sentence)
-    SemanticGraph graph = s.get(SemanticGraphCoreAnnotations.EnhancedPlusPlusDependenciesAnnotation.class);
+    SemanticGraph graph =
+        s.get(SemanticGraphCoreAnnotations.EnhancedPlusPlusDependenciesAnnotation.class);
     IndexedWord root = (graph != null) ? graph.getFirstRoot() : null;
 
     if (root != null) {
@@ -162,17 +161,18 @@ public class NlpService {
     }
 
     // Debug (can be toggled/removed)
-    out.debugDependencies = (graph != null) ? graph.toString(SemanticGraph.OutputFormat.READABLE) : null;
+    out.debugDependencies =
+        (graph != null) ? graph.toString(SemanticGraph.OutputFormat.READABLE) : null;
 
     return out;
   }
 
   public static class ParseResult {
-    public String intent;        // pay|send|transfer (lemma)
-    public String amountText;    // surface text e.g., "$12", "15 dollars"
-    public String recipient;     // "John", "@alex99", "my mom", "ACME Inc."
-    public String currency;      // optional (null unless you add normalization)
-    public Double amountValue;   // optional numeric value (null unless normalized)
+    public String intent; // pay|send|transfer (lemma)
+    public String amountText; // surface text e.g., "$12", "15 dollars"
+    public String recipient; // "John", "@alex99", "my mom", "ACME Inc."
+    public String currency; // optional (null unless you add normalization)
+    public Double amountValue; // optional numeric value (null unless normalized)
     public String debugDependencies;
   }
 
@@ -182,23 +182,27 @@ public class NlpService {
     String currency;
   }
 
-  private static final Pattern MONEY_SYMBOL_FIRST = Pattern.compile(
-      "^(?:about\\s+|around\\s+|approximately\\s+|~)?([\\p{Sc}€£$¥₹₩₽₺₴₦₫])\\s*([0-9]{1,3}(?:,[0-9]{3})*(?:\\.[0-9]+)?|[0-9]+(?:\\.[0-9]+)?)",
-      Pattern.CASE_INSENSITIVE);
+  private static final Pattern MONEY_SYMBOL_FIRST =
+      Pattern.compile(
+          "^(?:about\\s+|around\\s+|approximately\\s+|~)?([\\p{Sc}€£$¥₹₩₽₺₴₦₫])\\s*([0-9]{1,3}(?:,[0-9]{3})*(?:\\.[0-9]+)?|[0-9]+(?:\\.[0-9]+)?)",
+          Pattern.CASE_INSENSITIVE);
 
-  private static final Pattern MONEY_WORD = Pattern.compile(
-      "^([0-9]{1,3}(?:,[0-9]{3})*(?:\\.[0-9]+)?|[0-9]+(?:\\.[0-9]+)?)\\s*"
-          + "(dollars?|d[oó]lares?|bucks|usd|euros?|eur|pounds?|libras?|gbp|yen|jpy|rupees?|rupias?|inr|pesos?|mxn|cop|ars|clp|pen|soles?|cad|aud|chf|francs?|reales?|brl)",
-      Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
+  private static final Pattern MONEY_WORD =
+      Pattern.compile(
+          "^([0-9]{1,3}(?:,[0-9]{3})*(?:\\.[0-9]+)?|[0-9]+(?:\\.[0-9]+)?)\\s*"
+              + "(dollars?|d[oó]lares?|bucks|usd|euros?|eur|pounds?|libras?|gbp|yen|jpy|rupees?|rupias?|inr|pesos?|mxn|cop|ars|clp|pen|soles?|cad|aud|chf|francs?|reales?|brl)",
+          Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
 
   // Non-anchored finders for fallback scanning inside full input
-  private static final Pattern MONEY_SYMBOL_FIRST_ANYWHERE = Pattern.compile(
-      "(?:about\\s+|around\\s+|approximately\\s+|~)?([\\p{Sc}€£$¥₹₩₽₺₴₦₫])\\s*([0-9]{1,3}(?:,[0-9]{3})*(?:\\.[0-9]+)?|[0-9]+(?:\\.[0-9]+)?)",
-      Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
-  private static final Pattern MONEY_WORD_ANYWHERE = Pattern.compile(
-      "([0-9]{1,3}(?:,[0-9]{3})*(?:\\.[0-9]+)?|[0-9]+(?:\\.[0-9]+)?)\\s*"
-          + "(dollars?|d[oó]lares?|bucks|usd|euros?|eur|pounds?|libras?|gbp|yen|jpy|rupees?|rupias?|inr|pesos?|mxn|cop|ars|clp|pen|soles?|cad|aud|chf|francs?|reales?|brl)",
-      Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
+  private static final Pattern MONEY_SYMBOL_FIRST_ANYWHERE =
+      Pattern.compile(
+          "(?:about\\s+|around\\s+|approximately\\s+|~)?([\\p{Sc}€£$¥₹₩₽₺₴₦₫])\\s*([0-9]{1,3}(?:,[0-9]{3})*(?:\\.[0-9]+)?|[0-9]+(?:\\.[0-9]+)?)",
+          Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
+  private static final Pattern MONEY_WORD_ANYWHERE =
+      Pattern.compile(
+          "([0-9]{1,3}(?:,[0-9]{3})*(?:\\.[0-9]+)?|[0-9]+(?:\\.[0-9]+)?)\\s*"
+              + "(dollars?|d[oó]lares?|bucks|usd|euros?|eur|pounds?|libras?|gbp|yen|jpy|rupees?|rupias?|inr|pesos?|mxn|cop|ars|clp|pen|soles?|cad|aud|chf|francs?|reales?|brl)",
+          Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
 
   private AmountNorm normalizeAmount(String text) {
     String t = text.trim();
@@ -226,7 +230,11 @@ public class NlpService {
   }
 
   private static Double safeParseDouble(String s) {
-    try { return Double.parseDouble(s); } catch (Exception e) { return null; }
+    try {
+      return Double.parseDouble(s);
+    } catch (Exception e) {
+      return null;
+    }
   }
 
   private static String mapCurrencySymbol(String sym) {
@@ -314,7 +322,8 @@ public class NlpService {
   }
 
   private static boolean containsWord(String haystack, String needle) {
-    return haystack.matches(".*(?i)(?<![A-Za-zÁÉÍÓÚáéíóúÑñ])" + Pattern.quote(needle) + "(?![A-Za-zÁÉÍÓÚáéíóúÑñ]).*");
+    return haystack.matches(
+        ".*(?i)(?<![A-Za-zÁÉÍÓÚáéíóúÑñ])" + Pattern.quote(needle) + "(?![A-Za-zÁÉÍÓÚáéíóúÑñ]).*");
   }
 
   private static String findMoneyInText(String input) {
