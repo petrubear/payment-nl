@@ -7,25 +7,25 @@
   <version>0.1.0</version>
 
   <properties>
-    <java.version>21</java.version>
-    <spring.boot.version>3.3.2</spring.boot.version>
-    <corenlp.version>4.5.7</corenlp.version>
-    <jackson.version>2.17.2</jackson.version>
-    <junit.jupiter.version>5.10.3</junit.jupiter.version>
-    <maven.compiler.plugin.version>3.11.0</maven.compiler.plugin.version>
-    <maven.surefire.plugin.version>3.2.5</maven.surefire.plugin.version>
-    <maven.enforcer.plugin.version>3.5.0</maven.enforcer.plugin.version>
-    <springdoc.version>2.5.0</springdoc.version>
-    <commons.lang3.version>3.14.0</commons.lang3.version>
-    <spotless.version>2.43.0</spotless.version>
+    <commons.lang3.version>3.18.0</commons.lang3.version>
+    <corenlp.version>4.5.10</corenlp.version>
     <google.java.format.version>1.17.0</google.java.format.version>
+    <jackson.version>2.17.2</jackson.version>
+    <java.version>21</java.version>
+    <junit.jupiter.version>5.10.3</junit.jupiter.version>
+    <maven.compiler.plugin.version>3.14.0</maven.compiler.plugin.version>
+    <maven.enforcer.plugin.version>3.6.1</maven.enforcer.plugin.version>
+    <maven.surefire.plugin.version>3.5.3</maven.surefire.plugin.version>
+    <spotless.version>2.46.1</spotless.version>
+    <spring.boot.version>3.5.5</spring.boot.version>
+    <springdoc.version>2.5.0</springdoc.version>
   </properties>
 
   <dependencies>
     <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-web</artifactId>
-      <version>${spring.boot.version}</version>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
+      <version>${jackson.version}</version>
     </dependency>
 
     <dependency>
@@ -61,9 +61,9 @@
     </dependency>
 
     <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-annotations</artifactId>
-      <version>${jackson.version}</version>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>${commons.lang3.version}</version>
     </dependency>
 
     <dependency>
@@ -74,6 +74,12 @@
     </dependency>
 
     <dependency>
+      <groupId>org.springdoc</groupId>
+      <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+      <version>${springdoc.version}</version>
+    </dependency>
+
+    <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
       <version>${spring.boot.version}</version>
@@ -81,64 +87,14 @@
     </dependency>
 
     <dependency>
-      <groupId>org.springdoc</groupId>
-      <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-      <version>${springdoc.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-lang3</artifactId>
-      <version>${commons.lang3.version}</version>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+      <version>${spring.boot.version}</version>
     </dependency>
   </dependencies>
 
   <build>
     <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>${maven.compiler.plugin.version}</version>
-        <configuration>
-          <release>21</release>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-enforcer-plugin</artifactId>
-        <version>${maven.enforcer.plugin.version}</version>
-        <executions>
-          <execution>
-            <id>enforce-java-21</id>
-            <goals>
-              <goal>enforce</goal>
-            </goals>
-            <configuration>
-              <rules>
-                <requireJavaVersion>
-                  <!-- Require JDK 21.x specifically -->
-                  <version>[21,22)</version>
-                  <message>Build requires JDK 21. Please use Java 21.x.</message>
-                </requireJavaVersion>
-              </rules>
-              <fail>true</fail>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-maven-plugin</artifactId>
-        <version>${spring.boot.version}</version>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>${maven.surefire.plugin.version}</version>
-        <configuration>
-          <useModulePath>false</useModulePath>
-        </configuration>
-      </plugin>
       <plugin>
         <groupId>com.diffplug.spotless</groupId>
         <artifactId>spotless-maven-plugin</artifactId>
@@ -152,6 +108,53 @@
             <removeUnusedImports/>
           </java>
         </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${maven.compiler.plugin.version}</version>
+        <configuration>
+          <release>21</release>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>${maven.enforcer.plugin.version}</version>
+        <executions>
+          <execution>
+            <id>enforce-java-21</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <requireJavaVersion>
+                  <version>[21,22)</version>
+                  <message>Build requires JDK 21. Please use Java 21.x.</message>
+                </requireJavaVersion>
+              </rules>
+              <fail>true</fail>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>${maven.surefire.plugin.version}</version>
+        <configuration>
+          <useModulePath>false</useModulePath>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <version>${spring.boot.version}</version>
       </plugin>
     </plugins>
   </build>
