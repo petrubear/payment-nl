@@ -64,5 +64,42 @@ class ParseControllerIT {
     assertNull(body.currency, "currency should be null");
     assertNull(body.recipient, "recipient should be null");
   }
-}
 
+  @Test
+  void parsesSpanishEurosAndRecipient() {
+    String url = "http://localhost:" + port + "/api/parse";
+    ParseRequest req = new ParseRequest("enviar 20 euros a Juan.");
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    HttpEntity<ParseRequest> entity = new HttpEntity<>(req, headers);
+
+    ResponseEntity<ParseResponse> response = rest.postForEntity(url, entity, ParseResponse.class);
+    assertEquals(HttpStatus.OK, response.getStatusCode());
+    ParseResponse body = response.getBody();
+    assertNotNull(body, "response body");
+    assertEquals("send", body.intent, "intent (ES)");
+    assertEquals("EUR", body.currency, "currency (ES)");
+    assertNotNull(body.amountValue, "amountValue not null (ES)");
+    assertEquals(20.0, body.amountValue, 1e-6, "amountValue (ES)");
+    assertEquals("Juan", body.recipient, "recipient (ES)");
+  }
+
+  @Test
+  void parsesSpanishVerbTransferirWithUsd() {
+    String url = "http://localhost:" + port + "/api/parse";
+    ParseRequest req = new ParseRequest("transferir $15 a gaby");
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    HttpEntity<ParseRequest> entity = new HttpEntity<>(req, headers);
+
+    ResponseEntity<ParseResponse> response = rest.postForEntity(url, entity, ParseResponse.class);
+    assertEquals(HttpStatus.OK, response.getStatusCode());
+    ParseResponse body = response.getBody();
+    assertNotNull(body, "response body");
+    assertEquals("transfer", body.intent, "intent transferir (ES)");
+    assertEquals("USD", body.currency, "currency (ES)");
+    assertNotNull(body.amountValue, "amountValue not null (ES)");
+    assertEquals(15.0, body.amountValue, 1e-6, "amountValue (ES)");
+    assertEquals("gaby", body.recipient, "recipient (ES)");
+  }
+}
