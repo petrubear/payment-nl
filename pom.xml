@@ -15,6 +15,8 @@
     <junit.jupiter.version>5.10.3</junit.jupiter.version>
     <maven.compiler.plugin.version>3.11.0</maven.compiler.plugin.version>
     <maven.surefire.plugin.version>3.2.5</maven.surefire.plugin.version>
+    <springdoc.version>2.5.0</springdoc.version>
+    <commons.lang3.version>3.14.0</commons.lang3.version>
   </properties>
 
   <dependencies>
@@ -80,6 +82,20 @@
       <version>${spring.boot.version}</version>
       <scope>test</scope>
     </dependency>
+    
+    <!-- OpenAPI / Swagger UI for Spring Web MVC -->
+    <dependency>
+      <groupId>org.springdoc</groupId>
+      <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+      <version>${springdoc.version}</version>
+    </dependency>
+
+    <!-- Force a modern commons-lang3 to satisfy swagger-core's NumberUtils usage -->
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>${commons.lang3.version}</version>
+    </dependency>
   </dependencies>
 
   <build>
@@ -107,4 +123,8 @@
       </plugin>
     </plugins>
   </build>
-</project>
+  
+  <!-- OpenAPI / Swagger UI for Spring Web MVC -->
+  <!-- Note: keep this inside the project and dependencies block -->
+  
+  </project>
