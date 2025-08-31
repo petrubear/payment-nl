@@ -1,0 +1,61 @@
+# --- Build outputs ---
+target/
+build/
+dependency-reduced-pom.xml
+surefire-reports/
+jacoco.exec
+
+# --- Java artifacts ---
+*.class
+*.jar
+*.war
+*.ear
+hs_err_pid*
+
+# --- Maven wrapper ---
+# Keep the wrapper JAR and properties if present
+!.mvn/wrapper/maven-wrapper.jar
+!.mvn/wrapper/maven-wrapper.properties
+
+# --- IDEs & editors ---
+# IntelliJ / JetBrains
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+
+# VS Code / Cursor
+.vscode/
+.cursor/
+.history/
+
+# Eclipse / STS
+.project
+.classpath
+.settings/
+.factorypath
+.apt_generated/
+.apt_generated_test/
+.springBeans
+.sts4-cache/
+bin/
+
+# --- OS files ---
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- Logs & temp ---
+logs/
+*.log
+*.tmp
+*.swp
+*.swo
+*~
+~$*
+
+# --- Env / local overrides ---
+.env
+.env.*
+
