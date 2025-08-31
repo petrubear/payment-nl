@@ -45,3 +45,18 @@
  - Keep PRs small and focused; update README and Swagger annotations where relevant.
  - Do not add license headers unless explicitly requested.
 
+ ## Commit Message Guidelines  
+
+ When creating commits, always prepend the commit message with one of the following types:  
+
+ - **feat:** Use when introducing a new feature or functionality.  
+    - Example: `feat: add scheduled report generation agent`  
+ - **fix:** Use when correcting bugs, errors, or unexpected behavior.  
+    - Example: `fix: resolve null pointer in payment event agent`  
+ - **chore:** Use for code refactoring, formatting, dependency updates, or other maintenance tasks that do not change functionality.  
+    - Example: `chore: reformat NotificationAgent class`
+ - **docs:** Use when adding or updating documentation only (no production code changes).  
+    - Example: `docs: update Agents.md with commit message guidelines`  
+  
+
+ These prefixes help agents (and developers) automatically categorize commits for changelogs, release notes, and CI/CD pipelines.  
